@@ -281,6 +281,8 @@
             white-space: nowrap;
         }
 
+        .table-wrap th { white-space: normal; }   /* long headers wrap rather than widen the table */
+
         td {
             padding: 0.6rem 1rem;
             border-bottom: 1px solid var(--border);
@@ -956,24 +958,25 @@
 <section class="slide" id="slide-03">
     <div class="slide-number">03</div>
     <h2>Optalysys's Photonic Link Module</h2>
-    <p>The series starts from one published device. Kundu, Hammond, Todd, Goel, Simpson, Rajendra, Michel, Crawford and three others describe it in &ldquo;Programmable Compute-in-Transit using Integrated Photonics&rdquo; (<a href="https://arxiv.org/abs/2608.21536">arXiv:2608.21536</a>, 21 August 2026, presented at OIP 2026).</p>
+    <p>The series starts from one published device. Kundu, Hammond, Todd, Goel, Simpson, Rajendra, Michel, Crawford, Bergamaschi, R. Todd and New, all of Optalysys, describe it in &ldquo;Programmable Compute-in-Transit using Integrated Photonics&rdquo; (<a href="https://arxiv.org/abs/2608.21536">arXiv:2608.21536</a>, submitted 21 August 2026).</p>
     <div class="diagram-grid cols-2">
         <div class="diagram-panel accent-border">
             <h4>What the paper reports</h4>
             <ul>
                 <li>A <strong>QSFP56 pluggable module</strong> with an integrated optical Fourier transform device.</li>
-                <li>It performs <strong>FFT, NTT, modular arithmetic and MAC</strong> on data passing through the link.</li>
+                <li>It lists <strong>radix-4 FFT and NTT, addition, subtraction, multiplication, MAC, floating-point MAC and modular arithmetic</strong>. The modular logic runs in the driver IP on the host FPGA, an AMD Alveo V80 attached through the QSFP56 port.</li>
                 <li>&ldquo;Tens of GFLOPs of operations on data links&rdquo;: the authors' claim.</li>
-                <li>Evaluated inside a <strong>CKKS bootstrapping</strong> flow: ring dimension 65,536, 32-bit words, about 420 GB streamed through the photonics; functional correctness checked against a CPU implementation.</li>
+                <li>Evaluated inside a <strong>CKKS bootstrapping</strong> flow: ring dimension 65,536, 32-bit words, about 420 GB streamed through the photonics; functional correctness checked against a CPU implementation. The 65,536-point NTTs were split into 256-point transforms, then spread over four optical channels by radix-4 decomposition.</li>
+                <li>The photonic devices run at 14 GBaud, with NRZ data into the module; module power is 9.7 W. No throughput, latency or energy per operation is measured.</li>
             </ul>
         </div>
         <div class="diagram-panel accent-border">
             <h4>What Optalysys says</h4>
             <ul>
-                <li>Compute-in-Transit is &ldquo;operations performed with light directly in the data path&rdquo;, and &ldquo;AI performance is increasingly limited by data movement&rdquo; (<a href="https://optalysys.com/what-we-do/">what we do</a>).</li>
-                <li>Estimated <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser; <strong>384 GOPS per wavelength</strong> at 32 GSps on GF45nm (<a href="https://optalysys.com/photonics/">photonics</a>).</li>
+                <li>Compute-in-Transit is &ldquo;operations performed with light directly in the data path&rdquo;, and &ldquo;AI infrastructure has hit the data movement wall&rdquo; (<a href="https://optalysys.com/what-we-do/">what we do</a>).</li>
+                <li>Estimated <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser; &ldquo;Native <strong>384 GOPS / lambda</strong> @ 32GSps (GF45nm)&rdquo; (<a href="https://optalysys.com/what-we-do/">what we do</a>).</li>
                 <li>Evaluation kit: photonic compute module, AMD Alveo V80 accelerator, QSFP data path and control software.</li>
-                <li>Stated targets: generative and agentic AI, HPC, post-quantum cryptography, physical AI, secure and confidential AI, DSP for telecoms.</li>
+                <li>Stated targets: distributed and hyperscale AI, optical interconnect, secure and confidential AI (what we do); AI, security, HPC and telecoms (<a href="https://optalysys.com/photonics/">photonics</a>). The paper adds post-quantum cryptography and FHE.</li>
             </ul>
         </div>
     </div>
@@ -981,20 +984,21 @@
         <div class="callout-label">How much weight these figures carry</div>
         <p>A third-party review notes that the GFLOPs figure is asserted rather than measured (<a href="https://pith.science/paper/2608.21536">pith.science</a>). The GOPS and pJ/bit figures are company estimates. This deck treats all three as claims and brackets &ldquo;tens of GFLOPs&rdquo; with 10 and 99 GFLOP/s, which is our reading, not a measurement.</p>
     </div>
-    <p style="font-size:0.8rem;">Note: the paper facts on this slide come from the arXiv listing and search summaries of it, not from a line-by-line reading of the full text. Corrections are welcome.</p>
+    <p style="font-size:0.8rem;">Note: the paper facts on this slide were checked against its full text (four pages) on 9 October 2026.</p>
 </section>
 
 <section class="slide" id="slide-04">
     <div class="slide-number">04</div>
     <h2>The Published Operation Set, and What Is Missing</h2>
-    <p>The public sources list four operations. Everything a candidate kernel does must be built from them, or it cannot run in the module.</p>
+    <p>The paper lists radix-4 FFT and NTT, addition and subtraction, multiplication, MAC, floating-point MAC and modular arithmetic (add, subtract, multiply, MAC, MSUB). Everything a candidate kernel does must be built from them, or it cannot run in the module.</p>
     <div class="table-wrap">
     <table>
         <tr><th>Operation</th><th>Listed?</th><th>What it gives an LLM kernel</th></tr>
-        <tr><td>FFT</td><td><span class="badge ok">yes</span></td><td>Frequency-domain compression along a sequence or within a chunk</td></tr>
-        <tr><td>NTT</td><td><span class="badge ok">yes</span></td><td>Exact transforms over integers mod q: FHE, not float traffic</td></tr>
-        <tr><td>Modular arithmetic</td><td><span class="badge ok">yes</span></td><td>Integer rescaling and encoding</td></tr>
-        <tr><td>MAC</td><td><span class="badge ok">yes</span></td><td>Sums, scaling by a fixed factor, dot products against a held vector</td></tr>
+        <tr><td>FFT (1&times;N, radix-4)</td><td><span class="badge ok">yes</span></td><td>Frequency-domain compression along a sequence or within a chunk</td></tr>
+        <tr><td>NTT (1&times;N, radix-4)</td><td><span class="badge ok">yes</span></td><td>Exact transforms over integers mod q: FHE, not float traffic</td></tr>
+        <tr><td>Modular arithmetic</td><td><span class="badge ok">yes</span></td><td>Integer rescaling and encoding (runs in the host FPGA&rsquo;s driver IP)</td></tr>
+        <tr><td>Addition, subtraction, multiplication</td><td><span class="badge ok">yes</span></td><td>Summing streams, scaling, element-wise products</td></tr>
+        <tr><td>MAC, floating-point MAC</td><td><span class="badge ok">yes</span></td><td>Dot products against a held vector, weighted sums</td></tr>
         <tr><td>Comparison</td><td><span class="badge bad">not listed</span></td><td>Needed for absmax scaling, thresholds, max</td></tr>
         <tr><td>Rounding to a narrower format</td><td><span class="badge bad">not listed</span></td><td>Needed to requantise BF16 to FP8</td></tr>
         <tr><td>Top-k selection</td><td><span class="badge bad">not listed</span></td><td>Needed by DeMo-style sparsification and KV block selection</td></tr>
@@ -1017,16 +1021,16 @@
         <span class="diagram-arrow">&rarr;</span>
         <span class="diagram-box">Modulators</span>
         <span class="diagram-arrow">&rarr;</span>
-        <span class="diagram-box accent">On-die optical transform<br>4 points per stage</span>
+        <span class="diagram-box accent">Passive diffractive OFT device<br>4 optical channels</span>
         <span class="diagram-arrow">&rarr;</span>
         <span class="diagram-box">Detectors</span>
         <span class="diagram-arrow">&rarr;</span>
         <span class="diagram-box accent">Digital recombination<br>larger, higher precision</span>
     </div>
     <ul>
-        <li><strong>Free space on the die.</strong> Optalysys's 2023 article &ldquo;Scaling up: using Fourier optics for bigger transforms&rdquo; describes moving the core optical transform into a free-space environment constructed in the plane of the silicon die (<a href="https://optalysys.com/scaling-up-using-fourier-optics-for-bigger-transforms">optalysys.com</a>).</li>
-        <li><strong>Small transforms, recombined.</strong> Each transform stage processes 4 data points at a time, with several stages per die. Small, low-precision optical transforms are recombined into larger, higher-precision power-of-2 transforms. The stated aim is FHE.</li>
-        <li><strong>Pending patents</strong>, as listed on PitchBook and not checked against the registers: &ldquo;Arbitrary size and precision Fourier transforms via optical Fourier transforms&rdquo; (GB-2643957-A, WO-2026057669-A1) and the same for number-theoretic transforms (GB-2643956-A, WO-2026057670-A1).</li>
+        <li><strong>A passive device on the chip.</strong> The photonic chip carries Mach-Zehnder modulators, &ldquo;a proprietary passive diffractive device that computes Optical Fourier Transform (OFT)&rdquo;, and balanced photodiodes for coherent detection (Kundu et al., section II).</li>
+        <li><strong>Small transforms, recombined.</strong> The prototype has four optical channels and builds larger transforms by radix-4 decomposition: in the FHE run, 65,536-point NTTs were split into 256-point transforms and spread over the four channels (Kundu et al., section IV).</li>
+        <li><strong>Pending patents</strong> (Optalysys Ltd, priority 10 September 2024, checked on <a href="https://patents.google.com/patent/GB2643957A">Google Patents</a>): &ldquo;Arbitrary size and precision Fourier transforms via optical Fourier transforms&rdquo; (GB-2643957-A, WO-2026057669-A1) and the same for number-theoretic transforms (GB-2643956-A, WO-2026057670-A1).</li>
     </ul>
     <p>So the native optical transform is small, and long transforms are built by recombination. How much of that recombination is digital, and whether it counts against the module's &ldquo;tens of GFLOPs&rdquo;, is not public. That question decides the budget (<a href="#slide-07">slide 07</a>).</p>
 </section>
@@ -1047,6 +1051,10 @@
     </table>
     </div>
     <p class="src" style="font-size:0.85rem;">Source: <a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Compute_in_Transit/blob/main/analysis/results.md">results.md</a>, section 1. 400G and 800G rows assume the same engine per link.</p>
+    <div class="callout">
+        <div class="callout-label">Port rate is not the optics' rate</div>
+        <p>25 GB/s is the QSFP56 port's rate. In the prototype the port connects the module to its host FPGA, and the photonic devices run at 14 GBaud, with NRZ data into four modulators (Kundu et al., section II). The paper does not show the optics keeping up with a full 200 Gb/s link, so treat 25 GB/s as the rate the module would have to match, not one it is shown to reach.</p>
+    </div>
     <p>Move the claim and the line rate below. Work per value uses the same conventions as <code>cit_budget.py</code>: FFT 2.5 log<sub>2</sub> n per value; 2-D DCT of c&times;c chunks 2 &times; 2.5 log<sub>2</sub> c; sum 1; dot product 2; FP8 requantisation about 2 (illustrative); top-k about 2 comparisons (illustrative).</p>
     <div class="control-panel">
         <div class="sim-grid">
@@ -1178,14 +1186,14 @@
     </div>
     <div class="callout">
         <div class="callout-label">Why this matters for LLM traffic</div>
-        <p>Decomposition buys exactness with extra passes and digital work. Float traffic does not need it, so an LLM kernel could, in principle, run the optics at its native precision. Whether the module exposes a low-precision mode, and at what ENOB, is not public. The FHE accelerator series works through the exact case (<a href="https://brendanjameslynskey.github.io/FHESim_04_Optical_NTT_Engines/#slide-03">FHESim 04</a>).</p>
+        <p>Decomposition buys exactness with extra passes and digital work. Float traffic does not need it, so an LLM kernel could, in principle, run the optics at its native precision. Optalysys claims &ldquo;Scalable accuracy e.g. FP4-&gt;FP64&rdquo; and the paper projects FP4 MAC on a future link, but no ENOB or error figure is published; the driver IP includes a proprietary error-correction block. The FHE accelerator series works through the exact case (<a href="https://brendanjameslynskey.github.io/FHESim_04_Optical_NTT_Engines/#slide-03">FHESim 04</a>).</p>
     </div>
 </section>
 
 <section class="slide" id="slide-09">
     <div class="slide-number">09</div>
     <h2>Energy per Bit</h2>
-    <p>Optalysys estimates <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser (<a href="https://optalysys.com/photonics/">optalysys.com/photonics</a>). For scale, the link energy coefficients used in Brendan's Disaggregated_Inference_Sim:</p>
+    <p>Optalysys estimates <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser (<a href="https://optalysys.com/what-we-do/">optalysys.com/what-we-do</a>). For scale, the link energy coefficients used in Brendan's Disaggregated_Inference_Sim:</p>
     <div class="table-wrap">
     <table>
         <tr><th>Link</th><th>pJ/bit</th><th>Status</th></tr>
@@ -1211,7 +1219,7 @@
     <table>
         <tr><th>#</th><th>Test</th><th>Question</th><th>Where it is decided</th></tr>
         <tr><td>1</td><td><strong>Bottleneck</strong></td><td>Does this traffic bound the system's time or throughput?</td><td>Simulation of the whole system, not the link alone</td></tr>
-        <tr><td>2</td><td><strong>Operations</strong></td><td>Is the kernel built only from FFT, NTT, modular arithmetic and MAC?</td><td><a href="#slide-04">Slide 04</a></td></tr>
+        <tr><td>2</td><td><strong>Operations</strong></td><td>Is the kernel built only from the listed operations (FFT, NTT, add, multiply, MAC, modular arithmetic)?</td><td><a href="#slide-04">Slide 04</a></td></tr>
         <tr><td>3</td><td><strong>Budget</strong></td><td>Does its work per byte fit C / R, with the transform charged or free?</td><td><a href="#slide-06">Slides 06</a> and <a href="#slide-07">07</a></td></tr>
         <tr><td>4</td><td><strong>Precision</strong></td><td>Does it tolerate analogue noise, or can it be made exact?</td><td><a href="#slide-08">Slide 08</a></td></tr>
         <tr><td>5</td><td><strong>Placement</strong></td><td>Does it need one flow (a pluggable) or many (a switch)?</td><td><a href="#slide-02">Slide 02</a></td></tr>
@@ -1292,8 +1300,8 @@
         <tr><th>Question</th><th>Why it matters</th><th>If yes</th><th>If no</th></tr>
         <tr><td><strong>Is the optical transform charged against the &ldquo;tens of GFLOPs&rdquo;?</strong></td><td>Decides whether any transform-based kernel fits</td><td>Only FFTs of length 8 or less fit at 3.96 ops/byte</td><td>Every fixed-band kernel fits; the remaining arithmetic decides</td></tr>
         <tr><td><strong>Can the module compare and round?</strong></td><td>FP8 requantisation, absmax scaling and top-k need them</td><td>Requantisation joins the candidates</td><td>Kernels stay data-independent: fixed bands, fixed scales</td></tr>
-        <tr><td><strong>What is the native transform size and precision?</strong></td><td>Sets the recombination work and the noise floor (<a href="#slide-05">slide 05</a>, <a href="#slide-08">08</a>)</td><td>A large native size with float-level ENOB suits LLM traffic</td><td>A 4-point stage at low ENOB pushes work into digital recombination</td></tr>
-        <tr><td><strong>Is LLM traffic a target?</strong></td><td>The stated targets include generative and agentic AI; the published evaluation is FHE</td><td>LLM kernels may get dedicated support</td><td>This series is a feasibility study on a device built for cryptography</td></tr>
+        <tr><td><strong>What is the native transform size and precision?</strong></td><td>Sets the recombination work and the noise floor (<a href="#slide-05">slide 05</a>, <a href="#slide-08">08</a>)</td><td>A large native size with float-level ENOB suits LLM traffic</td><td>A small native transform at low ENOB pushes work into digital recombination</td></tr>
+        <tr><td><strong>Is LLM traffic a target?</strong></td><td>The stated targets include distributed and hyperscale AI; the published evaluation is FHE</td><td>LLM kernels may get dedicated support</td><td>This series is a feasibility study on a device built for cryptography</td></tr>
     </table>
     </div>
     <p>A measured throughput figure, in place of the asserted one, would also replace this deck's 10 to 99 GFLOP/s bracket.</p>
@@ -1306,7 +1314,7 @@
         <li><strong>Compute in transit changes data that must move anyway.</strong> A pluggable sees one flow, a switch sees many; only a switch can sum two streams.</li>
         <li><strong>The budget is compute rate over line rate.</strong> On a QSFP56 link the module's claim gives 0.40 to 3.96 operations per byte; faster links shrink it.</li>
         <li><strong>Whether the transform is free decides everything.</strong> Charged, nothing longer than an 8-point BF16 FFT fits; free, every fixed-band kernel fits.</li>
-        <li><strong>The published operations are FFT, NTT, modular arithmetic and MAC.</strong> Without comparison or rounding, kernels must be data-independent: a fixed band instead of top-k.</li>
+        <li><strong>The published operations are FFT, NTT, MAC, and modular and floating-point arithmetic.</strong> Without comparison or rounding, kernels must be data-independent: a fixed band instead of top-k.</li>
         <li><strong>The largest movements are training syncs:</strong> 141.10 GB per Llama-3-70B BF16 update, against 268.4 MB for a 2,048-token Llama-3-8B KV hand-off.</li>
         <li><strong>Test 1 comes first.</strong> Compressing traffic helps only where the link bounds the system, and then the endpoint can often do it too.</li>
         <li><strong>Next:</strong> <a href="https://brendanjameslynskey.github.io/CiT_02_Data_Movement_in_LLM_Training/">deck 02</a> applies the five tests to data movement in LLM training.</li>
