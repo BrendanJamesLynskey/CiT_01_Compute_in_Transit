@@ -1048,18 +1048,20 @@
         <tr><td>400G</td><td>50</td><td>high (99 GFLOP/s)</td><td>1.98</td></tr>
         <tr><td>800G</td><td>100</td><td>low (10 GFLOP/s)</td><td>0.10</td></tr>
         <tr><td>800G</td><td>100</td><td>high (99 GFLOP/s)</td><td>0.99</td></tr>
+        <tr><td>Prototype optics (4 &times; 14 Gb/s NRZ)</td><td>7</td><td>low (10 GFLOP/s)</td><td>1.43</td></tr>
+        <tr><td>Prototype optics (4 &times; 14 Gb/s NRZ)</td><td>7</td><td>high (99 GFLOP/s)</td><td>14.14</td></tr>
     </table>
     </div>
-    <p class="src" style="font-size:0.85rem;">Source: <a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Compute_in_Transit/blob/main/analysis/results.md">results.md</a>, section 1. 400G and 800G rows assume the same engine per link.</p>
+    <p class="src" style="font-size:0.85rem;">Source: <a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Compute_in_Transit/blob/main/analysis/results.md">results.md</a>, section 1. 400G and 800G rows assume the same engine per link. The prototype-optics rate is our arithmetic from the paper, not a figure it states.</p>
     <div class="callout">
         <div class="callout-label">Port rate is not the optics' rate</div>
-        <p>25 GB/s is the QSFP56 port's rate. In the prototype the port connects the module to its host FPGA, and the photonic devices run at 14 GBaud, with NRZ data into four modulators (Kundu et al., section II). The paper does not show the optics keeping up with a full 200 Gb/s link, so treat 25 GB/s as the rate the module would have to match, not one it is shown to reach.</p>
+        <p>25 GB/s is the QSFP56 port's rate. In the prototype the port connects the module to its host FPGA, and the photonic devices run at 14 GBaud, with NRZ data into four modulators (Kundu et al., section II): about 7 GB/s, 28% of the port, by our arithmetic. At 7 GB/s the same claim gives <strong>1.43 to 14.14 operations per byte</strong>, enough for a charged BF16 FFT of length 2,048 at the high end. That is more work per byte, but on a link the prototype could not fill: a module limited to its optics' rate would itself throttle a 200 Gb/s link. 25 GB/s is the rate a product would have to match.</p>
     </div>
     <p>Move the claim and the line rate below. Work per value uses the same conventions as <code>cit_budget.py</code>: FFT 2.5 log<sub>2</sub> n per value; 2-D DCT of c&times;c chunks 2 &times; 2.5 log<sub>2</sub> c; sum 1; dot product 2; FP8 requantisation about 2 (illustrative); top-k about 2 comparisons (illustrative).</p>
     <div class="control-panel">
         <div class="sim-grid">
             <div class="control-row"><label for="bg-g">Claimed compute (GFLOP/s)</label><input type="range" id="bg-g" min="1" max="200" value="99"><span class="val" id="bg-g-val">99</span></div>
-            <div class="control-row"><label for="bg-r">Line rate</label><select id="bg-r"><option value="25" selected>25 GB/s (QSFP56 200G)</option><option value="50">50 GB/s (400G)</option><option value="100">100 GB/s (800G)</option></select></div>
+            <div class="control-row"><label for="bg-r">Line rate</label><select id="bg-r"><option value="25" selected>25 GB/s (QSFP56 200G)</option><option value="50">50 GB/s (400G)</option><option value="100">100 GB/s (800G)</option><option value="7">7 GB/s (prototype optics)</option></select></div>
             <div class="control-row"><label for="bg-f">Value format</label><select id="bg-f"><option value="2" selected>BF16 (2 bytes)</option><option value="4">FP32 (4 bytes)</option></select></div>
             <div class="control-row"><label for="bg-t">Optical transform</label><select id="bg-t"><option value="1" selected>charged against the budget</option><option value="0">free (done by the optics)</option></select></div>
         </div>
@@ -1312,7 +1314,7 @@
     <h2>What to Take Away</h2>
     <ul>
         <li><strong>Compute in transit changes data that must move anyway.</strong> A pluggable sees one flow, a switch sees many; only a switch can sum two streams.</li>
-        <li><strong>The budget is compute rate over line rate.</strong> On a QSFP56 link the module's claim gives 0.40 to 3.96 operations per byte; faster links shrink it.</li>
+        <li><strong>The budget is compute rate over line rate.</strong> On a QSFP56 link the module's claim gives 0.40 to 3.96 operations per byte; faster links shrink it. At the prototype optics' own rate, about 7 GB/s, it gives 1.43 to 14.14, but that rate cannot fill a 200 Gb/s link.</li>
         <li><strong>Whether the transform is free decides everything.</strong> Charged, nothing longer than an 8-point BF16 FFT fits; free, every fixed-band kernel fits.</li>
         <li><strong>The published operations are FFT, NTT, MAC, and modular and floating-point arithmetic.</strong> Without comparison or rounding, kernels must be data-independent: a fixed band instead of top-k.</li>
         <li><strong>The largest movements are training syncs:</strong> 141.10 GB per Llama-3-70B BF16 update, against 268.4 MB for a 2,048-token Llama-3-8B KV hand-off.</li>
