@@ -802,7 +802,7 @@
 <header class="hero">
     <div class="series-label">Compute in Transit &mdash; Presentation 01</div>
     <h1><span class="accent">Compute in Transit:</span> the Idea and the Budget</h1>
-    <p class="subtitle">What it means to compute on data while it crosses a link, what Optalysys's photonic link module is reported to do, and the arithmetic that decides what fits: operations per byte at line rate, whether the transform is charged, precision, energy and placement. Five tests, applied to the data movements of LLM training and inference.</p>
+    <p class="subtitle">What it means to compute on data while it crosses a link, what a photonic link module (arXiv:2608.21536) is reported to do, and the arithmetic that decides what fits: operations per byte at line rate, whether the transform is charged, precision, energy and placement. Five tests, applied to the data movements of LLM training and inference.</p>
 
     <div class="tags">
         <span class="tag">Compute in transit</span>
@@ -834,7 +834,7 @@
     <ul class="contents-list">
         <li><a href="#slide-01">Data Movement Is the Bottleneck</a></li>
         <li><a href="#slide-02">What Compute in Transit Means</a></li>
-        <li><a href="#slide-03">Optalysys's Photonic Link Module</a></li>
+        <li><a href="#slide-03">The Photonic Link Module</a></li>
         <li><a href="#slide-04">The Published Operation Set, and What Is Missing</a></li>
         <li><a href="#slide-05">How the Optics Computes</a></li>
         <li><a href="#slide-06">Interactive: the Budget in Operations per Byte</a></li>
@@ -843,7 +843,7 @@
         <li><a href="#slide-09">Energy per Bit</a></li>
         <li><a href="#slide-10">Five Tests Any Candidate Must Pass</a></li>
         <li><a href="#slide-11">Candidates at a Glance</a></li>
-        <li><a href="#slide-12">Open Questions for Optalysys</a></li>
+        <li><a href="#slide-12">Open Questions for the Module's Developer</a></li>
         <li><a href="#slide-13">What to Take Away</a></li>
     </ul>
     <div class="concepts">
@@ -957,8 +957,8 @@
 
 <section class="slide" id="slide-03">
     <div class="slide-number">03</div>
-    <h2>Optalysys's Photonic Link Module</h2>
-    <p>The series starts from one published device. Kundu, Hammond, Todd, Goel, Simpson, Rajendra, Michel, Crawford, Bergamaschi, R. Todd and New, all of Optalysys, describe it in &ldquo;Programmable Compute-in-Transit using Integrated Photonics&rdquo; (<a href="https://arxiv.org/abs/2608.21536">arXiv:2608.21536</a>, submitted 21 August 2026).</p>
+    <h2>The Photonic Link Module</h2>
+    <p>The series starts from one published device. Kundu, Hammond, Todd, Goel, Simpson, Rajendra, Michel, Crawford, Bergamaschi, R. Todd and New describe it in &ldquo;Programmable Compute-in-Transit using Integrated Photonics&rdquo; (<a href="https://arxiv.org/abs/2608.21536">arXiv:2608.21536</a>, submitted 21 August 2026).</p>
     <div class="diagram-grid cols-2">
         <div class="diagram-panel accent-border">
             <h4>What the paper reports</h4>
@@ -971,12 +971,12 @@
             </ul>
         </div>
         <div class="diagram-panel accent-border">
-            <h4>What Optalysys says</h4>
+            <h4>What the developer says</h4>
             <ul>
-                <li>Compute-in-Transit is &ldquo;operations performed with light directly in the data path&rdquo;, and &ldquo;AI infrastructure has hit the data movement wall&rdquo; (<a href="https://optalysys.com/what-we-do/">what we do</a>).</li>
-                <li>Estimated <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser; &ldquo;Native <strong>384 GOPS / lambda</strong> @ 32GSps (GF45nm)&rdquo; (<a href="https://optalysys.com/what-we-do/">what we do</a>).</li>
+                <li>Compute-in-Transit is &ldquo;operations performed with light directly in the data path&rdquo;, and &ldquo;AI infrastructure has hit the data movement wall&rdquo; (the developer&rsquo;s website).</li>
+                <li>Estimated <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser; &ldquo;Native <strong>384 GOPS / lambda</strong> @ 32GSps (GF45nm)&rdquo; (the developer&rsquo;s website).</li>
                 <li>Evaluation kit: photonic compute module, AMD Alveo V80 accelerator, QSFP data path and control software.</li>
-                <li>Stated targets: distributed and hyperscale AI, optical interconnect, secure and confidential AI (what we do); AI, security, HPC and telecoms (<a href="https://optalysys.com/photonics/">photonics</a>). The paper adds post-quantum cryptography and FHE.</li>
+                <li>Stated targets: distributed and hyperscale AI, optical interconnect, secure and confidential AI; AI, security, HPC and telecoms (the developer&rsquo;s website). The paper adds post-quantum cryptography and FHE.</li>
             </ul>
         </div>
     </div>
@@ -1030,7 +1030,7 @@
     <ul>
         <li><strong>A passive device on the chip.</strong> The photonic chip carries Mach-Zehnder modulators, &ldquo;a proprietary passive diffractive device that computes Optical Fourier Transform (OFT)&rdquo;, and balanced photodiodes for coherent detection (Kundu et al., section II).</li>
         <li><strong>Small transforms, recombined.</strong> The prototype has four optical channels and builds larger transforms by radix-4 decomposition: in the FHE run, 65,536-point NTTs were split into 256-point transforms and spread over the four channels (Kundu et al., section IV).</li>
-        <li><strong>Pending patents</strong> (Optalysys Ltd, priority 10 September 2024, checked on <a href="https://patents.google.com/patent/GB2643957A">Google Patents</a>): &ldquo;Arbitrary size and precision Fourier transforms via optical Fourier transforms&rdquo; (GB-2643957-A, WO-2026057669-A1) and the same for number-theoretic transforms (GB-2643956-A, WO-2026057670-A1).</li>
+        <li><strong>Pending patents</strong> (the module&rsquo;s developer, priority 10 September 2024, checked on <a href="https://patents.google.com/patent/GB2643957A">Google Patents</a>): &ldquo;Arbitrary size and precision Fourier transforms via optical Fourier transforms&rdquo; (GB-2643957-A, WO-2026057669-A1) and the same for number-theoretic transforms (GB-2643956-A, WO-2026057670-A1).</li>
     </ul>
     <p>So the native optical transform is small, and long transforms are built by recombination. How much of that recombination is digital, and whether it counts against the module's &ldquo;tens of GFLOPs&rdquo;, is not public. That question decides the budget (<a href="#slide-07">slide 07</a>).</p>
 </section>
@@ -1160,7 +1160,7 @@
     <ul>
         <li><strong>The verdict turns on one unknown.</strong> Charged, only short transforms and light arithmetic fit. Free, every transform-based kernel fits.</li>
         <li>Requantising to FP8 fits the high budget arithmetically, but it needs rounding and comparison, which are not in the published set.</li>
-        <li>This is the first open question for Optalysys (<a href="#slide-12">slide 12</a>).</li>
+        <li>This is the first open question for the module&rsquo;s developer (<a href="#slide-12">slide 12</a>).</li>
     </ul>
 </section>
 
@@ -1181,25 +1181,25 @@
             <h4>Cryptography: exact results</h4>
             <ul>
                 <li>FHE and post-quantum schemes work in integers mod q. A single wrong digit corrupts the ciphertext.</li>
-                <li>Optalysys reaches exactness by <strong>decomposition</strong>: small, low-precision optical transforms recombined digitally into larger, higher-precision ones (the patents on <a href="#slide-05">slide 05</a>).</li>
+                <li>The module reaches exactness by <strong>decomposition</strong>: small, low-precision optical transforms recombined digitally into larger, higher-precision ones (the patents on <a href="#slide-05">slide 05</a>).</li>
                 <li>The CKKS bootstrapping evaluation checked functional correctness against a CPU implementation (<a href="#slide-03">slide 03</a>).</li>
             </ul>
         </div>
     </div>
     <div class="callout">
         <div class="callout-label">Why this matters for LLM traffic</div>
-        <p>Decomposition buys exactness with extra passes and digital work. Float traffic does not need it, so an LLM kernel could, in principle, run the optics at its native precision. Optalysys claims &ldquo;Scalable accuracy e.g. FP4-&gt;FP64&rdquo; and the paper projects FP4 MAC on a future link, but no ENOB or error figure is published; the driver IP includes a proprietary error-correction block. The FHE accelerator series works through the exact case (<a href="https://brendanjameslynskey.github.io/FHESim_04_Optical_NTT_Engines/#slide-03">FHESim 04</a>).</p>
+        <p>Decomposition buys exactness with extra passes and digital work. Float traffic does not need it, so an LLM kernel could, in principle, run the optics at its native precision. The developer claims &ldquo;Scalable accuracy e.g. FP4-&gt;FP64&rdquo; and the paper projects FP4 MAC on a future link, but no ENOB or error figure is published; the driver IP includes a proprietary error-correction block. The FHE accelerator series works through the exact case (<a href="https://brendanjameslynskey.github.io/FHESim_04_Optical_NTT_Engines/#slide-03">FHESim 04</a>).</p>
     </div>
 </section>
 
 <section class="slide" id="slide-09">
     <div class="slide-number">09</div>
     <h2>Energy per Bit</h2>
-    <p>Optalysys estimates <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser (<a href="https://optalysys.com/what-we-do/">optalysys.com/what-we-do</a>). For scale, the link energy coefficients used in Brendan's Disaggregated_Inference_Sim:</p>
+    <p>The module&rsquo;s developer estimates <strong>2.76 pJ/bit</strong> link energy on 45 nm silicon photonics, excluding the laser (the developer&rsquo;s website). For scale, the link energy coefficients used in Brendan's Disaggregated_Inference_Sim:</p>
     <div class="table-wrap">
     <table>
         <tr><th>Link</th><th>pJ/bit</th><th>Status</th></tr>
-        <tr><td>Optalysys compute-in-transit link</td><td>2.76</td><td>Company estimate, 45 nm, excluding laser</td></tr>
+        <tr><td>Photonic compute-in-transit link</td><td>2.76</td><td>Company estimate, 45 nm, excluding laser</td></tr>
         <tr><td>Co-packaged optics</td><td>3</td><td>Illustrative simulator coefficient</td></tr>
         <tr><td>NVLink 4</td><td>5</td><td>Illustrative simulator coefficient</td></tr>
         <tr><td>InfiniBand NDR 400G</td><td>15</td><td>Illustrative simulator coefficient</td></tr>
@@ -1208,7 +1208,7 @@
     </div>
     <p class="src" style="font-size:0.85rem;">Simulator presets: <a href="https://github.com/BrendanJamesLynskey/disaggregated_inference_sim/blob/main/src/disagg_sim/hardware.py">disagg_sim/hardware.py</a>, <code>LINKS</code>. They are first-order coefficients for the simulator's energy model, not measurements.</p>
     <ul>
-        <li><strong>The scopes differ.</strong> The simulator's figures mean end to end (SerDes, NIC, switch); the Optalysys figure is a link estimate without the laser. The comparison says the module's estimate is in the range of an optical link, not that it saves energy over one.</li>
+        <li><strong>The scopes differ.</strong> The simulator's figures mean end to end (SerDes, NIC, switch); the module&rsquo;s figure is a link estimate without the laser. The comparison says the module's estimate is in the range of an optical link, not that it saves energy over one.</li>
         <li><strong>What would save energy</strong> is moving fewer bits. A kernel that compresses a stream by a factor k cuts the downstream bits by k, and that saving dwarfs any difference between these coefficients, provided the compression is worth having.</li>
         <li>The laser, the host FPGA and any digital recombination add to the module's bill. None is in the 2.76 pJ/bit.</li>
     </ul>
@@ -1295,7 +1295,7 @@
 
 <section class="slide" id="slide-12">
     <div class="slide-number">12</div>
-    <h2>Open Questions for Optalysys</h2>
+    <h2>Open Questions for the Module's Developer</h2>
     <p>Four answers would settle most of this deck's uncertainty. Each changes a verdict, not a detail.</p>
     <div class="table-wrap">
     <table>

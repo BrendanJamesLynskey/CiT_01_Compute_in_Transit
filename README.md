@@ -1,6 +1,6 @@
 # Compute in Transit 01 — Compute in Transit: the Idea and the Budget
 
-What it means to compute on data while it crosses a link, what Optalysys's photonic link module (Kundu et al., arXiv:2608.21536) is reported to do, and the arithmetic that decides what fits: operations per byte at line rate (0.40 to 3.96 on a QSFP56 link for a "tens of GFLOPs" claim), whether the optical transform is charged against that budget, the published operation set and what it lacks, precision, energy per bit, and placement at an endpoint, in the link or in a switch. It ends with five tests any candidate must pass and a first placement of the data movements of LLM training and inference, with an interactive budget calculator.
+What it means to compute on data while it crosses a link, what a photonic link module (Kundu et al., arXiv:2608.21536) is reported to do, and the arithmetic that decides what fits: operations per byte at line rate (0.40 to 3.96 on a QSFP56 link for a "tens of GFLOPs" claim), whether the optical transform is charged against that budget, the published operation set and what it lacks, precision, energy per bit, and placement at an endpoint, in the link or in a switch. It ends with five tests any candidate must pass and a first placement of the data movements of LLM training and inference, with an interactive budget calculator.
 
 Topics: Compute in transit, Operations per byte, Photonic link module, Published operation set, Placement, Five tests.
 
