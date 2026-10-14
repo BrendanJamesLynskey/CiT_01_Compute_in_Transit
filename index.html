@@ -1015,7 +1015,7 @@
 <section class="slide" id="slide-05">
     <div class="slide-number">05</div>
     <h2>How the Optics Computes</h2>
-    <p>A lens performs a Fourier transform on a coherent light field as it propagates, and two lenses with a mask between them compute a convolution (the 4f system). The transform has no operation count, only the cost of getting data into and out of the light. The background is in <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/">Fourier Optics for Inference 01</a>: <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/#slide-02">the lens as a Fourier transformer</a> and <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/#slide-03">the 4f system</a>.</p>
+    <p>A lens performs a Fourier transform on a coherent light field as it propagates, and two lenses with a mask between them compute a convolution (the 4f system). The transform has no operation count, only the cost of getting data into and out of the light. The background is in <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/">Fourier Optics for Inference 01</a>: <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/#slide-03">the lens as a Fourier transformer</a> and <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/#slide-05">the 4f system</a>.</p>
     <div class="diagram-flow">
         <span class="diagram-box dim">Electrical bits in</span>
         <span class="diagram-arrow">&rarr;</span>
@@ -1173,7 +1173,7 @@
             <h4>Float traffic: a noise level</h4>
             <ul>
                 <li>Gradients, activations and KV are floating-point. They already carry their format's rounding error, so the analogue chain need only match it, not be exact.</li>
-                <li>The rule from <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/#slide-09">FOptInf 01, slide 09</a>: relative RMS error = crest &times; 2<sup>&minus;ENOB</sup> &times; 2/&radic;12. Matching BF16 needs about 10.3 ENOB, INT8 8.0, FP8 E4M3 6.3 (<a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Fourier_Optics_Inference/blob/main/analysis/results.md">FOptInf results.md</a>, section 6).</li>
+                <li>The rule from <a href="https://brendanjameslynskey.github.io/FOptInf_01_Fourier_Optics_for_Engineers/#slide-17">FOptInf 01, slide 17</a>: relative RMS error = crest &times; 2<sup>&minus;ENOB</sup> &times; 2/&radic;12. Matching BF16 needs about 10.3 ENOB, INT8 8.0, FP8 E4M3 6.3 (<a href="https://github.com/BrendanJamesLynskey/LLM_Hub_Fourier_Optics_Inference/blob/main/analysis/results.md">FOptInf results.md</a>, section 6).</li>
                 <li>Compressed traffic is lossy anyway. Analogue noise adds to the compression error; it does not need to vanish.</li>
             </ul>
         </div>
